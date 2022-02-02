@@ -1,6 +1,6 @@
 use std::io::prelude::*;
-use std::net::TcpListener;
-use std::net::TcpStream;
+use local_ip_address::local_ip;
+use std::net::{TcpListener, TcpStream, SocketAddr};
 
 fn main() {
 
@@ -8,10 +8,12 @@ fn main() {
     // THIS IS ONLY FOR TESTING PURPOSES RIGHT NOW
 
     // TODO: send signal for stuff like closing stream
-    // TODO: cli interface first
+    // TODO: cli interface
     // TODO: multithread
 
-    let listener = TcpListener::bind("127.0.0.1:42069").unwrap();
+    let local_ip = local_ip().expect("Couldn't get local IP address. Check your internet connection.");
+    let socket = SocketAddr::new(local_ip, 42069);
+    let listener = TcpListener::bind(socket).unwrap();
 
     loop {
         if let Ok((s, a)) = listener.accept() {
